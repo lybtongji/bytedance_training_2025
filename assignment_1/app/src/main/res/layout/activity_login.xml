@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="16dp"
+    tools:context=".LoginActivity">
+
+    <TextView
+        android:id="@+id/login_hello_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="欢迎登录"
+        android:textColor="@color/black"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        app:layout_constraintBottom_toTopOf="@id/login_hello_desc"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/login_hello_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="请登录您的账户"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:typeface="monospace"
+        app:layout_constraintBottom_toTopOf="@id/login_input_email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_hello_title" />
+
+    <EditText
+        android:id="@+id/login_input_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/login_input_bg"
+        android:drawableStart="@drawable/ic_login_email"
+        android:drawablePadding="8dp"
+        android:hint="请输入邮箱"
+        android:padding="8dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/dark_grey"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/login_input_password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_hello_desc" />
+
+    <EditText
+        android:id="@+id/login_input_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/login_input_bg"
+        android:drawableStart="@drawable/ic_login_password"
+        android:drawableEnd="@drawable/ic_login_password_hide"
+        android:drawablePadding="8dp"
+        android:hint="请输入密码"
+        android:inputType="textPassword"
+        android:padding="8dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/dark_grey"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/login_forgot"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_input_email" />
+
+    <TextView
+        android:id="@+id/login_forgot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="忘记密码？"
+        android:textColor="@color/blue"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/login_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_input_password" />
+
+    <Button
+        android:id="@+id/login_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/login_btn_bg"
+        android:text="登录"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toTopOf="@id/hline_mid"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_forgot" />
+
+    <View
+        android:id="@+id/hline_start"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@drawable/hline"
+        app:layout_constraintBottom_toBottomOf="@id/hline_mid"
+        app:layout_constraintEnd_toStartOf="@id/hline_mid"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/hline_mid" />
+
+    <TextView
+        android:id="@+id/hline_mid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="或者"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@id/login_by_wechat"
+        app:layout_constraintEnd_toStartOf="@id/hline_end"
+        app:layout_constraintStart_toEndOf="@id/hline_start"
+        app:layout_constraintTop_toBottomOf="@id/login_btn" />
+
+    <View
+        android:id="@+id/hline_end"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@drawable/hline"
+        app:layout_constraintBottom_toBottomOf="@id/hline_mid"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@id/hline_mid"
+        app:layout_constraintTop_toTopOf="@id/hline_mid" />
+
+    <Button
+        android:id="@+id/login_by_wechat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/login_input_bg"
+        android:drawableStart="@drawable/ic_login_wechat"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:text="微信登录"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@id/text_no_account_1"
+        app:layout_constraintEnd_toStartOf="@id/login_by_apple"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/hline_mid" />
+
+    <Button
+        android:id="@+id/login_by_apple"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/login_input_bg"
+        android:drawableStart="@drawable/ic_login_apple"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:text="Apple登录"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@id/login_by_wechat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/login_by_wechat"
+        app:layout_constraintTop_toTopOf="@id/login_by_wechat" />
+
+    <Space
+        android:id="@+id/space_no_account_1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/text_no_account_1"
+        app:layout_constraintEnd_toStartOf="@id/text_no_account_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/text_no_account_1" />
+
+    <TextView
+        android:id="@+id/text_no_account_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="还没有账户？"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@id/space_bottom"
+        app:layout_constraintEnd_toStartOf="@id/text_no_account_2"
+        app:layout_constraintStart_toEndOf="@id/space_no_account_1"
+        app:layout_constraintTop_toBottomOf="@id/login_by_wechat" />
+
+    <TextView
+        android:id="@+id/text_no_account_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="立即注册"
+        android:textColor="@color/blue"
+        app:layout_constraintBottom_toBottomOf="@id/text_no_account_1"
+        app:layout_constraintEnd_toStartOf="@id/space_no_account_2"
+        app:layout_constraintStart_toEndOf="@id/text_no_account_1"
+        app:layout_constraintTop_toTopOf="@id/text_no_account_1" />
+
+    <Space
+        android:id="@+id/space_no_account_2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/text_no_account_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/text_no_account_2"
+        app:layout_constraintTop_toTopOf="@id/text_no_account_2" />
+
+    <Space
+        android:id="@+id/space_bottom"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_no_account_1" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
