@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="EditFuncSelectButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@color/light_ghost_white</item>
+        <item name="android:textColor">@color/charcoal_gray</item>
+        <item name="borderWidth">1dp</item>
+        <item name="borderRound">0dp</item>
+    </style>
+</resources>

@@ -30,10 +30,6 @@ class MainActivity : Activity() {
         setDescription()
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
     private fun setDescription() {
         val userPrefs = getSharedPreferences("user_settings", MODE_PRIVATE)
         val description = userPrefs.getString("description", "欢迎来到信息App")
