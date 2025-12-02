@@ -58,7 +58,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="8dp"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:text=""
         app:layout_constraintBottom_toTopOf="@id/edit_horizontal_10"
         app:layout_constraintEnd_toStartOf="@id/edit_save_btn"

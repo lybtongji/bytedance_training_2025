@@ -2,7 +2,14 @@
 <resources>
 
     <style name="EditFuncSelectButton" parent="Widget.AppCompat.Button">
-        <item name="android:background">@color/charcoal</item>
+        <item name="android:backgroundTint">@color/charcoal</item>
+        <item name="android:textColor">@color/ghost_white</item>
+        <item name="borderWidth">1dp</item>
+        <item name="borderRound">0dp</item>
+    </style>
+
+    <style name="EditSubViewButton" parent="Widget.AppCompat.TextView">
+        <item name="android:backgroundTint">@color/charcoal</item>
         <item name="android:textColor">@color/ghost_white</item>
         <item name="borderWidth">1dp</item>
         <item name="borderRound">0dp</item>
