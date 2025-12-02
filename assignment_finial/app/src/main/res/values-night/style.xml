@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="EditFuncSelectButton" parent="Widget.AppCompat.Button">
+    <style name="EditMainViewButton" parent="Widget.AppCompat.TextView">
         <item name="android:backgroundTint">@color/charcoal</item>
         <item name="android:textColor">@color/ghost_white</item>
+        <item name="android:padding">0dp</item>
         <item name="borderWidth">1dp</item>
         <item name="borderRound">0dp</item>
     </style>
@@ -11,6 +12,7 @@
     <style name="EditSubViewButton" parent="Widget.AppCompat.TextView">
         <item name="android:backgroundTint">@color/charcoal</item>
         <item name="android:textColor">@color/ghost_white</item>
+        <item name="android:padding">0dp</item>
         <item name="borderWidth">1dp</item>
         <item name="borderRound">0dp</item>
     </style>

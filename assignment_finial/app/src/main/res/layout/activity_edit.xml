@@ -94,59 +94,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_horizontal_80" />
 
-    <Button
-        android:id="@+id/edit_cut"
-        style="@style/EditFuncSelectButton"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/edit_main_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="✂️"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/edit_rotate"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_horizontal_90" />
-
-    <Button
-        android:id="@+id/edit_rotate"
-        style="@style/EditFuncSelectButton"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="🔄"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/edit_light"
-        app:layout_constraintStart_toEndOf="@id/edit_cut"
-        app:layout_constraintTop_toBottomOf="@id/edit_horizontal_90" />
-
-    <Button
-        android:id="@+id/edit_light"
-        style="@style/EditFuncSelectButton"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="🔆"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/edit_text"
-        app:layout_constraintStart_toEndOf="@id/edit_rotate"
-        app:layout_constraintTop_toBottomOf="@id/edit_horizontal_90" />
-
-    <Button
-        android:id="@+id/edit_text"
-        style="@style/EditFuncSelectButton"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="📝︎"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/edit_text_style"
-        app:layout_constraintStart_toEndOf="@id/edit_light"
-        app:layout_constraintTop_toBottomOf="@id/edit_horizontal_90" />
-
-    <Button
-        android:id="@+id/edit_text_style"
-        style="@style/EditFuncSelectButton"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="A"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/edit_text"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_horizontal_90" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

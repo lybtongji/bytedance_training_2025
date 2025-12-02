@@ -9,18 +9,17 @@ import androidx.recyclerview.widget.RecyclerView
 
 class EditRotateAdapter() :
     RecyclerView.Adapter<EditRotateAdapter.ViewHolder>() {
-    private val params = arrayOf(
-        "+90°",
-        "-90°",
-        "+180°",
-        "↔",
-        "↕",
-    )
 
     data class Item(
-        val id: Int,
         val title: String,
-        val description: String?,
+    )
+
+    private val items = arrayOf(
+        Item("+90°"),
+        Item("-90°"),
+        Item("+180°"),
+        Item("↔"),
+        Item("↕"),
     )
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -44,17 +43,11 @@ class EditRotateAdapter() :
         holder: ViewHolder,
         position: Int
     ) {
-        holder.bind(
-            Item(
-                position,
-                params[position],
-                null,
-            )
-        )
+        holder.bind(items[position])
     }
 
     override fun getItemCount(): Int {
-        return params.size
+        return items.size
     }
 
 }
