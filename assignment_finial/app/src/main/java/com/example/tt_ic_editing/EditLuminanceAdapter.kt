@@ -23,7 +23,7 @@ class EditLuminanceAdapter() :
         Item("亮度", -100f, 100f, 0f),
     )
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textView: TextView = itemView.findViewById(R.id.sub_slider_title)
         private val slider: Slider = itemView.findViewById(R.id.sub_slider)
 

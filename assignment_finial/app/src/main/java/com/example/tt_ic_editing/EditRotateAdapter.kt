@@ -22,7 +22,7 @@ class EditRotateAdapter() :
         Item("↕"),
     )
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textView: Button = itemView.findViewById(R.id.sub_text_btn)
 
         fun bind(item: Item) {

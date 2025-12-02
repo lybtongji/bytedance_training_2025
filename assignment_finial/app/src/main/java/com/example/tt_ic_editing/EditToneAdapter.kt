@@ -24,7 +24,7 @@ class EditToneAdapter() :
         Item("对比度", -50f, 150f, 0f),
     )
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textView: TextView = itemView.findViewById(R.id.sub_slider_title)
         private val slider: Slider = itemView.findViewById(R.id.sub_slider)
 

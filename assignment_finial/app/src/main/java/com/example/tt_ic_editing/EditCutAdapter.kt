@@ -22,7 +22,7 @@ class EditCutAdapter() :
         Item("9:16"),
     )
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textButton: Button = itemView.findViewById(R.id.sub_text_btn)
 
         fun bind(item: Item) {

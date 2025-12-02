@@ -49,7 +49,7 @@ class EditStickerAdapter() :
         Item(R.drawable.icon_stamp_106001),
     )
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imageView: ImageView = itemView.findViewById(R.id.sub_image_thumb)
 
         fun bind(item: Item) {
