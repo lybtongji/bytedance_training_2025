@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 
-class EditCutAdapter() :
-    RecyclerView.Adapter<EditCutAdapter.ViewHolder>() {
+class EditCropAdapter() :
+    RecyclerView.Adapter<EditCropAdapter.ViewHolder>() {
 
     data class Item(
         val title: String,

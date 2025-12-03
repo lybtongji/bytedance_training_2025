@@ -15,29 +15,32 @@ class EditSelectAdapter(private val subView: RecyclerView) :
     )
 
     private val items = arrayOf(
-        Item("✂️", EditCutAdapter()),
+        Item("✂️", EditCropAdapter()),
         Item("🔄", EditRotateAdapter()),
         Item("🔆", EditLuminanceAdapter()),
         Item("\uD83C\uDF17", EditContrastAdapter()),
         Item("✨", EditFilterAdapter()),
         Item("\uD83D\uDE02", EditStickerAdapter()),
-        Item("📝︎", null),
+        Item("📝︎", EditTextEffectAdapter()),
         Item("A", null),
     )
+
+    init {
+        subView.adapter = items?.first()?.adapter
+    }
+
+    private var selectedPosition: Int = 0
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textButton: Button = itemView.findViewById(R.id.main_text_btn)
 
-        fun bind(item: Item) {
+        fun bind(item: Item, position: Int) {
             textButton.text = item.title
             textButton.setOnClickListener { _ ->
                 subView.adapter = item.adapter
+                selectedPosition = position
             }
         }
-    }
-
-    init {
-        subView.adapter = items?.first()?.adapter
     }
 
     override fun onCreateViewHolder(
@@ -53,7 +56,7 @@ class EditSelectAdapter(private val subView: RecyclerView) :
         holder: ViewHolder,
         position: Int
     ) {
-        holder.bind(items[position])
+        holder.bind(items[position], position)
     }
 
     override fun getItemCount(): Int {
