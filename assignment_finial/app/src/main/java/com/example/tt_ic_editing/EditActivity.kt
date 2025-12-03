@@ -26,12 +26,6 @@ class EditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        intent.data?.let { scaledViewModel.uri = it } ?: run {
-//            Toast.makeText(this, "图片路径为空", Toast.LENGTH_SHORT).show()
-//            finish()
-//            return
-//        }
-
         enableEdgeToEdge()
         setContentView(R.layout.activity_edit)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -110,6 +104,9 @@ class EditActivity : AppCompatActivity() {
                         finish()
                     }
                 }
+            } ?: run {
+                Toast.makeText(this, "图片路径为空", Toast.LENGTH_SHORT).show()
+                finish()
             }
         }
 
