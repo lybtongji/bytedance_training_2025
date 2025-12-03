@@ -6,4 +6,5 @@ import androidx.lifecycle.ViewModel
 class ScaledBitmapViewModal : ViewModel() {
     var uri: Uri? = null
     val bitmap = ScaledBitmap()
+    var opIndex = 0
 }

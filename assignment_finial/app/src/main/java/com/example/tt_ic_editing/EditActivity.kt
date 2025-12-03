@@ -1,9 +1,12 @@
 package com.example.tt_ic_editing
 
+import android.content.ContentValues
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -41,6 +44,46 @@ class EditActivity : AppCompatActivity() {
 //        findViewById<ImageView>(R.id.edit_image).setImageURI(intent.data)
         findViewById<Button>(R.id.edit_return_btn).setOnClickListener { _ ->
             this.finish()
+        }
+        findViewById<Button>(R.id.edit_save_btn).setOnClickListener { _ ->
+            val filename = "IMG_${System.currentTimeMillis()}.jpg"
+            val mimeType = "image/jpeg"
+            val compressFormat = Bitmap.CompressFormat.JPEG
+            val quality = 90
+
+            val contentValues = ContentValues().apply {
+                put(MediaStore.Images.Media.DISPLAY_NAME, filename)
+                put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+                put(MediaStore.Images.Media.IS_PENDING, 1)
+            }
+            val resolver = this.contentResolver
+            val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+            uri?.let { outUri ->
+                scaledViewModel.uri?.let { inUri ->
+                    scaledViewModel.bitmap.load(this, inUri)?.let { bitmap ->
+                        try {
+                            resolver.openOutputStream(outUri)?.use { outStream ->
+                                bitmap.compress(compressFormat, quality, outStream)
+                            }
+                            contentValues.clear()
+                            contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
+                            resolver.update(uri, contentValues, null, null)
+                            Toast.makeText(this, "保存成功到相册", Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
+                            Toast.makeText(this, "文件保存失败", Toast.LENGTH_SHORT).show()
+                            e.printStackTrace()
+                        }
+                    } ?: run {
+                        Toast.makeText(this, "无法打开输出文件", Toast.LENGTH_SHORT).show()
+                    }
+                } ?: run {
+                    Toast.makeText(this, "图片文件路径丢失", Toast.LENGTH_SHORT).show()
+                }
+            } ?: run {
+                Toast.makeText(this, "无法获取保存路径", Toast.LENGTH_SHORT).show()
+            }
         }
 
         val thumbImage = findViewById<ImageView>(R.id.edit_image)

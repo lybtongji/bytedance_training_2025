@@ -8,9 +8,9 @@ class OperationSequence<T> {
         return this // 支持链式
     }
 
-    fun execute(target: T): T {
+    fun execute(target: T, from: Int = 0): T {
         var result = target
-        for (op in operations) {
+        for (op in operations.subList(from, operations.size)) {
             result = op.apply(result)
         }
         return result
