@@ -2,6 +2,7 @@ package com.example.tt_ic_editing
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.AttributeSet
 import android.graphics.Matrix
 import android.graphics.RectF
@@ -32,6 +33,11 @@ class PreviewImageView @JvmOverloads constructor(
         scaleGestureDetector = ScaleGestureDetector(context, ScaleListener())
         gestureDetector = GestureDetector(context, GestureListener())
     }
+
+//    override fun setImageBitmap(bm: Bitmap?) {
+//        super.setImageBitmap(bm)
+//        bm?.run { post { centerImage() } }
+//    }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -75,6 +81,15 @@ class PreviewImageView @JvmOverloads constructor(
         }
     }
 
+    private fun centerImage() {
+        val rect = getMatrixRectF()
+
+        val dx = (width - rect.left - rect.right) / 2
+        val dy = (height - rect.top - rect.bottom) / 2
+
+        imageMatrixInternal.postTranslate(dx, dy)
+    }
+
     // 边界修正
     private fun fixTranslate() {
         val rect = getMatrixRectF()
@@ -95,8 +110,12 @@ class PreviewImageView @JvmOverloads constructor(
     // 获取当前图片变换后的 Rect
     private fun getMatrixRectF(): RectF {
         val drawable = drawable ?: return RectF()
-        val rect =
-            RectF(0f, 0f, drawable.intrinsicWidth.toFloat(), drawable.intrinsicHeight.toFloat())
+        val rect = RectF(
+            0f,
+            0f,
+            drawable.intrinsicWidth.toFloat(),
+            drawable.intrinsicHeight.toFloat(),
+        )
         val matrix = imageMatrixInternal
         matrix.mapRect(rect)
         return rect

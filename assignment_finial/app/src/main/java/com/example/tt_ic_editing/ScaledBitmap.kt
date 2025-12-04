@@ -10,19 +10,17 @@ import androidx.exifinterface.media.ExifInterface
 class ScaledBitmap : NormalBitmap() {
     fun load(context: Context, uri: Uri, reqWidth: Int, reqHeight: Int): Bitmap? {
         return try {
-            val exif = ExifInterface(context.contentResolver.openInputStream(uri)!!)
-            val orientation = exif.getAttributeInt(
-                ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_NORMAL
-            )
-
             // 第一次解码：只获取图片尺寸，不加载图片
             val options = BitmapFactory.Options().apply {
                 inJustDecodeBounds = true  // 只获取边界信息，不分配像素内存
             }
 
-            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            val orientation = context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 BitmapFactory.decodeStream(inputStream, null, options)
+                ExifInterface(inputStream).getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL
+                )
             }
 
             val rawWidth: Int
@@ -74,6 +72,9 @@ class ScaledBitmap : NormalBitmap() {
 
     fun calculateInSampleSize(width: Int, height: Int, reqWidth: Int, reqHeight: Int): Int {
         var inSampleSize = 1
+
+        val reqWidth = reqWidth * 2
+        val reqHeight = reqHeight * 2
 
         while (width / inSampleSize > reqWidth || height / inSampleSize > reqHeight) {
             inSampleSize *= 2

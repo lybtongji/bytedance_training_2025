@@ -3,9 +3,9 @@ package com.example.tt_ic_editing
 import android.content.ContentValues
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.PersistableBundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
@@ -19,10 +19,46 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tt_ic_editing.interfaces.OnEditSelectedListener
+import com.example.tt_ic_editing.viewmodel.EditViewModel
 
 class EditActivity : AppCompatActivity() {
+    private val editSelectViewModel: EditViewModel by viewModels()
     private val operationViewModel: OperationViewModel<Bitmap> by viewModels()
     private val scaledViewModel: ScaledBitmapViewModal by viewModels()
+
+//    private val selectView = findViewById<RecyclerView>(R.id.edit_sub_view)
+//    private val selectAdapter = EditSelectAdapter(selectView)
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+
+        outState.putInt("selectedPosition", editSelectViewModel.editSelectAdapter.selectedPosition)
+    }
+
+    override fun onRestoreInstanceState(
+        savedInstanceState: Bundle?,
+        persistentState: PersistableBundle?
+    ) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
+
+        Log.d("App", "onRestoreInstanceState")
+        editSelectViewModel.editSelectAdapter.selectedPosition =
+            savedInstanceState?.getInt("selectedPosition", 0) ?: 0
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        Log.d("App", "onConfigurationChanged")
+    }
+
+    override fun onContentChanged() {
+        super.onContentChanged()
+
+        Log.d("App", "onContentChanged")
+        Log.d("App", "POS: ${editSelectViewModel.editSelectAdapter.selectedPosition}")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +124,7 @@ class EditActivity : AppCompatActivity() {
             intent.data?.let { uri ->
                 if (uri == scaledViewModel.uri) {
                     scaledViewModel.bitmap.getImage()?.let { im ->
+//                        thumbImage.scaleType = ImageView.ScaleType.CENTER
                         thumbImage.setImageBitmap(operationViewModel.sequence.execute(im))
                     } ?: run {
                         Toast.makeText(this, "图片加载失败", Toast.LENGTH_SHORT).show()
@@ -101,6 +138,7 @@ class EditActivity : AppCompatActivity() {
                         thumbImage.width,
                         thumbImage.height,
                     )?.let { im ->
+//                        thumbImage.scaleType = ImageView.ScaleType.CENTER
                         thumbImage.setImageBitmap(operationViewModel.sequence.execute(im))
 //                        thumbImage.matrix.reset()
                     } ?: run {
@@ -134,6 +172,14 @@ class EditActivity : AppCompatActivity() {
                 else -> LinearLayoutManager.HORIZONTAL
             }
 
-        mainView.adapter = EditSelectAdapter(subView)
+//        mainView.adapter = EditSelectAdapter(subView)
+        mainView.adapter = editSelectViewModel.editSelectAdapter
+        (mainView.adapter as EditSelectAdapter).onEditSelectedListener =
+            object : OnEditSelectedListener {
+                override fun onItemSelected(position: Int) {
+                    subView.adapter = (mainView.adapter as EditSelectAdapter).adapter
+                }
+            }
+//        subView.adapter = (mainView.adapter as EditSelectAdapter).adapter
     }
 }
