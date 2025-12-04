@@ -5,7 +5,12 @@ class OperationSequence<T> {
 
     fun add(op: Operation<T>): OperationSequence<T> {
         operations.add(op)
-        return this // 支持链式
+        return this
+    }
+
+    fun remove(): OperationSequence<T> {
+        operations.removeLastOrNull()
+        return this
     }
 
     fun execute(target: T, from: Int = 0): T {
@@ -14,5 +19,9 @@ class OperationSequence<T> {
             result = op.apply(result)
         }
         return result
+    }
+
+    fun execute_last(target: T): T {
+        return operations.lastOrNull()?.apply(target) ?: target
     }
 }

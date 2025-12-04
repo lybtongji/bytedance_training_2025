@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -82,8 +83,10 @@ class EditActivity : AppCompatActivity() {
 
         val thumbImage = findViewById<ImageView>(R.id.edit_image)
         thumbImage.post {
-            intent.data?.let {
-                if (it == scaledViewModel.uri) {
+            Log.d("App", "width: ${thumbImage.width}, height: ${thumbImage.height}")
+
+            intent.data?.let { uri ->
+                if (uri == scaledViewModel.uri) {
                     scaledViewModel.bitmap.getImage()?.let { im ->
                         thumbImage.setImageBitmap(operationViewModel.sequence.execute(im))
                     } ?: run {
@@ -91,14 +94,15 @@ class EditActivity : AppCompatActivity() {
                         finish()
                     }
                 } else {
-                    scaledViewModel.uri = it
+                    scaledViewModel.uri = uri
                     scaledViewModel.bitmap.load(
                         this,
-                        it,
+                        uri,
                         thumbImage.width,
                         thumbImage.height,
-                    )?.let {
-                        thumbImage.setImageBitmap(operationViewModel.sequence.execute(it))
+                    )?.let { im ->
+                        thumbImage.setImageBitmap(operationViewModel.sequence.execute(im))
+//                        thumbImage.matrix.reset()
                     } ?: run {
                         Toast.makeText(this, "图片加载失败", Toast.LENGTH_SHORT).show()
                         finish()
