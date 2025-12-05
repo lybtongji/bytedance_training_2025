@@ -11,6 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import kotlin.math.abs
 import kotlin.math.min
+import androidx.core.graphics.toColorInt
 
 class CropOverlayView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
@@ -22,7 +23,7 @@ class CropOverlayView(context: Context, attrs: AttributeSet?) : View(context, at
     }
 
     private val maskPaint = Paint().apply {
-        color = Color.parseColor("#AA000000")
+        color = "#AA000000".toColorInt()
     }
 
     // 初始裁剪框
@@ -32,9 +33,20 @@ class CropOverlayView(context: Context, attrs: AttributeSet?) : View(context, at
     private var lastX = 0f
     private var lastY = 0f
 
+    private var ratio: Float? = null
+        set(value) {
+            field = value
+        }
+
     enum class TouchArea { MOVE, LEFT, TOP, RIGHT, BOTTOM, LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM }
 
     private val handleSize = 40f  // 四角大小检测范围
+//
+//    fun setCropRatio(newRatio: Float) {
+//        ratio = newRatio
+//        updateCropRect()  // 根据比例更新裁剪框
+//        invalidate()      // 重新绘制
+//    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         // 初始化为居中的正方形
@@ -145,6 +157,4 @@ class CropOverlayView(context: Context, attrs: AttributeSet?) : View(context, at
     private fun near(x: Float, y: Float, px: Float, py: Float): Boolean {
         return abs(x - px) < handleSize && abs(y - py) < handleSize
     }
-
-    fun getCropRect(): RectF = cropRect
 }

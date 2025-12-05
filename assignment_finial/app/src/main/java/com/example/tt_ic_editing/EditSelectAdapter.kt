@@ -55,6 +55,7 @@ class EditSelectAdapter() :
 
         fun bind(item: Item, position: Int) {
             textButton.text = item.title
+//            textButton.isSelected = false
             textButton.setOnClickListener { _ ->
 //                subView.adapter = item.adapter
                 selectedPosition = position

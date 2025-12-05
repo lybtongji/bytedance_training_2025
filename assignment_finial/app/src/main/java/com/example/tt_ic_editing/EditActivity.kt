@@ -27,37 +27,17 @@ class EditActivity : AppCompatActivity() {
     private val operationViewModel: OperationViewModel<Bitmap> by viewModels()
     private val scaledViewModel: ScaledBitmapViewModal by viewModels()
 
-//    private val selectView = findViewById<RecyclerView>(R.id.edit_sub_view)
-//    private val selectAdapter = EditSelectAdapter(selectView)
-
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
 
         outState.putInt("selectedPosition", editSelectViewModel.editSelectAdapter.selectedPosition)
     }
 
-    override fun onRestoreInstanceState(
-        savedInstanceState: Bundle?,
-        persistentState: PersistableBundle?
-    ) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState)
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
 
-        Log.d("App", "onRestoreInstanceState")
         editSelectViewModel.editSelectAdapter.selectedPosition =
-            savedInstanceState?.getInt("selectedPosition", 0) ?: 0
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-
-        Log.d("App", "onConfigurationChanged")
-    }
-
-    override fun onContentChanged() {
-        super.onContentChanged()
-
-        Log.d("App", "onContentChanged")
-        Log.d("App", "POS: ${editSelectViewModel.editSelectAdapter.selectedPosition}")
+            savedInstanceState.getInt("selectedPosition", 0)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

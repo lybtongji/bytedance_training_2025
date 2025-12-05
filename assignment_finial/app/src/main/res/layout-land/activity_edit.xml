@@ -86,7 +86,25 @@
         <com.example.tt_ic_editing.CropOverlayView
             android:id="@+id/crop_overlay"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/btn_crop_done"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="top|end"
+            android:background="@android:color/transparent"
+            android:padding="8dp"
+            android:text="✔️" />
+
+        <Button
+            android:id="@+id/btn_crop_cancel"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="top|start"
+            android:background="@android:color/transparent"
+            android:padding="8dp"
+            android:text="❌️" />
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
