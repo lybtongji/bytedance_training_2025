@@ -1,5 +1,7 @@
 package com.example.tt_ic_editing.recycler_adapter
 
+import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,7 @@ import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tt_ic_editing.R
 import com.example.tt_ic_editing.interfaces.OnEditSelectedListener
+import com.example.tt_ic_editing.operations.OperationSequence
 
 class EditSelectAdapter() :
     RecyclerView.Adapter<EditSelectAdapter.ViewHolder>() {
@@ -20,7 +23,7 @@ class EditSelectAdapter() :
 
     private val items = arrayOf(
         Item("✂️", EditCropAdapter({ getRootView?.invoke() })),
-        Item("🔄", EditRotateAdapter()),
+        Item("🔄", EditRotateAdapter({ getMatrix -> doRotate?.invoke(getMatrix) })),
         Item("🔆", EditLuminanceAdapter()),
         Item("\uD83C\uDF17", EditContrastAdapter()),
         Item("✨", EditFilterAdapter()),
@@ -34,6 +37,7 @@ class EditSelectAdapter() :
 //    }
 
     var getRootView: (() -> View?)? = null
+    var doRotate: ((((Bitmap) -> Matrix)) -> Unit)? = null
 
     var onEditSelectedListener: OnEditSelectedListener? = null
 

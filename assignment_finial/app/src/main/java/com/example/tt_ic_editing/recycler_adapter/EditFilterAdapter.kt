@@ -7,7 +7,7 @@ import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tt_ic_editing.R
 
-class EditFilterAdapter() :
+class EditFilterAdapter(private val getRootView: (() -> View?)? = null) :
     RecyclerView.Adapter<EditFilterAdapter.ViewHolder>() {
 
     data class Item(

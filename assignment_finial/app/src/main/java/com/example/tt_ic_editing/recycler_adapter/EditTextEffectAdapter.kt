@@ -12,7 +12,7 @@ import com.example.tt_ic_editing.R
 import com.google.android.material.slider.Slider
 
 
-class EditTextEffectAdapter() :
+class EditTextEffectAdapter(private val getRootView: (() -> View?)? = null) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {

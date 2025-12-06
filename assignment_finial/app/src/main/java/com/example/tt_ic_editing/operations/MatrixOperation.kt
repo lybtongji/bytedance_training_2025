@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Matrix
 import com.example.tt_ic_editing.interfaces.Operation
 
-class MatrixOperation(private val matrix: Matrix) : Operation<Bitmap> {
+class MatrixOperation(private val getMatrix: ((Bitmap) -> Matrix)) : Operation<Bitmap> {
     override fun apply(target: Bitmap): Bitmap {
         return Bitmap.createBitmap(
             target,
@@ -12,7 +12,7 @@ class MatrixOperation(private val matrix: Matrix) : Operation<Bitmap> {
             0,
             target.width,
             target.height,
-            matrix,
+            getMatrix(target),
             true,
         )
     }

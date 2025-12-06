@@ -3,6 +3,8 @@ package com.example.tt_ic_editing
 import android.content.ContentValues
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.Matrix
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -20,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tt_ic_editing.interfaces.OnEditSelectedListener
 import com.example.tt_ic_editing.operations.CropOperation
+import com.example.tt_ic_editing.operations.MatrixOperation
 import com.example.tt_ic_editing.recycler_adapter.EditCropAdapter
 import com.example.tt_ic_editing.recycler_adapter.EditSelectAdapter
 import com.example.tt_ic_editing.viewmodel.EditViewModel
@@ -142,6 +145,14 @@ class EditActivity : AppCompatActivity() {
                 else -> LinearLayoutManager.HORIZONTAL
             }
         editSelectViewModel.editSelectAdapter.getRootView = { findViewById(R.id.main) }
+        editSelectViewModel.editSelectAdapter.doRotate = { getMatrix ->
+            val bitmap = (thumbImage.drawable as BitmapDrawable).bitmap
+            thumbImage.applyMatrix(getMatrix(bitmap))
+
+            operationViewModel.sequence.add(
+                MatrixOperation(getMatrix)
+            )
+        }
 
         val subView = findViewById<RecyclerView>(R.id.edit_sub_view)
         subView.layoutManager = LinearLayoutManager(subView.context)

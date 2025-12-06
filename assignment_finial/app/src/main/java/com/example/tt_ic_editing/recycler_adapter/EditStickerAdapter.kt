@@ -7,7 +7,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tt_ic_editing.R
 
-class EditStickerAdapter() :
+class EditStickerAdapter(private val getRootView: (() -> View?)? = null) :
     RecyclerView.Adapter<EditStickerAdapter.ViewHolder>() {
 
     data class Item(

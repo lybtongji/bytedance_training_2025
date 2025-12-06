@@ -3,8 +3,10 @@ package com.example.tt_ic_editing
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.util.AttributeSet
 import android.graphics.Matrix
+import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.drawable.BitmapDrawable
 import android.util.Log
@@ -158,7 +160,7 @@ class PreviewImageView @JvmOverloads constructor(
             return true
         }
     }
-
+    
     fun Crop(rectF: RectF): RectF? {
         val inverseMatrix = Matrix()
         imageMatrixInternal.invert(inverseMatrix)
@@ -195,5 +197,19 @@ class PreviewImageView @JvmOverloads constructor(
         }
 
         return null
+    }
+
+    fun getImageMatrixInternal(): Matrix {
+        return imageMatrixInternal
+    }
+
+    fun setImageMatrixInternal(value: Matrix) {
+        imageMatrixInternal.set(value)
+        imageMatrix = imageMatrixInternal
+    }
+
+    fun applyMatrix(value: Matrix) {
+        imageMatrixInternal.postConcat(value)
+        imageMatrix = imageMatrixInternal
     }
 }

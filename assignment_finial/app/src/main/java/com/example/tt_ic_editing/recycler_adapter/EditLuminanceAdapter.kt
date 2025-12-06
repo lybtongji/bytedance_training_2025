@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tt_ic_editing.R
 import com.google.android.material.slider.Slider
 
-class EditLuminanceAdapter() :
+class EditLuminanceAdapter(private val getRootView: (() -> View?)? = null) :
     RecyclerView.Adapter<EditLuminanceAdapter.ViewHolder>() {
 
     data class Item(

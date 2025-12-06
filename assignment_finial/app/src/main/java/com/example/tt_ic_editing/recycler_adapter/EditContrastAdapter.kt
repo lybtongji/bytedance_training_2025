@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tt_ic_editing.R
 import com.google.android.material.slider.Slider
 
-class EditContrastAdapter() :
+class EditContrastAdapter(private val getRootView: (() -> View?)? = null) :
     RecyclerView.Adapter<EditContrastAdapter.ViewHolder>() {
 
     data class Item(
