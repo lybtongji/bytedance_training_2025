@@ -1,32 +1,36 @@
-package com.example.tt_ic_editing
+package com.example.tt_ic_editing.recycler_adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tt_ic_editing.R
+import com.google.android.material.slider.Slider
 
-class EditRotateAdapter() :
-    RecyclerView.Adapter<EditRotateAdapter.ViewHolder>() {
+class EditLuminanceAdapter() :
+    RecyclerView.Adapter<EditLuminanceAdapter.ViewHolder>() {
 
     data class Item(
         val title: String,
+        val from: Float,
+        val to: Float,
+        var now: Float,
     )
 
     private val items = arrayOf(
-        Item("+90°"),
-        Item("-90°"),
-        Item("+180°"),
-        Item("↔"),
-        Item("↕"),
+        Item("亮度", -100f, 100f, 0f),
     )
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val textView: Button = itemView.findViewById(R.id.sub_text_btn)
+        private val textView: TextView = itemView.findViewById(R.id.sub_slider_title)
+        private val slider: Slider = itemView.findViewById(R.id.sub_slider)
 
         fun bind(item: Item) {
             textView.text = item.title
+            slider.valueFrom = item.from
+            slider.valueTo = item.to
+            slider.value = item.now
         }
     }
 
@@ -35,7 +39,7 @@ class EditRotateAdapter() :
         viewType: Int
     ): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.sub_text_button, parent, false)
+            .inflate(R.layout.sub_slide, parent, false)
         return ViewHolder(view)
     }
 

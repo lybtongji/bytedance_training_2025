@@ -2,7 +2,7 @@ package com.example.tt_ic_editing.operations
 
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import com.example.tt_ic_editing.Operation
+import com.example.tt_ic_editing.interfaces.Operation
 
 class MatrixOperation(private val matrix: Matrix) : Operation<Bitmap> {
     override fun apply(target: Bitmap): Bitmap {

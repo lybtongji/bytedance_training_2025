@@ -1,4 +1,8 @@
-package com.example.tt_ic_editing
+package com.example.tt_ic_editing.operations
+
+import android.graphics.Bitmap
+import android.util.Log
+import com.example.tt_ic_editing.interfaces.Operation
 
 class OperationSequence<T> {
     private val operations = mutableListOf<Operation<T>>()

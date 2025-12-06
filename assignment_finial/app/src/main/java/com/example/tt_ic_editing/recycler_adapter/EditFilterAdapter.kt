@@ -1,25 +1,26 @@
-package com.example.tt_ic_editing
+package com.example.tt_ic_editing.recycler_adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tt_ic_editing.R
 
-class EditCropAdapter() :
-    RecyclerView.Adapter<EditCropAdapter.ViewHolder>() {
+class EditFilterAdapter() :
+    RecyclerView.Adapter<EditFilterAdapter.ViewHolder>() {
 
     data class Item(
         val title: String,
     )
 
     private val items = arrayOf(
-        Item("□"),
-        Item("1:1"),
-        Item("4:3"),
-        Item("16:9"),
-        Item("3:4"),
-        Item("9:16"),
+        Item("原图"),
+        Item("黑白"),
+        Item("复古"),
+        Item("清新"),
+        Item("暖色调"),
+        Item("冷色调"),
     )
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -1,25 +1,28 @@
-package com.example.tt_ic_editing
+package com.example.tt_ic_editing.recycler_adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tt_ic_editing.CropOverlayView
+import com.example.tt_ic_editing.R
 
-class EditFilterAdapter() :
-    RecyclerView.Adapter<EditFilterAdapter.ViewHolder>() {
+class EditCropAdapter(private val getRootView: (() -> View?)? = null) :
+    RecyclerView.Adapter<EditCropAdapter.ViewHolder>() {
 
     data class Item(
         val title: String,
+        val ratio: Float? = null
     )
 
     private val items = arrayOf(
-        Item("原图"),
-        Item("黑白"),
-        Item("复古"),
-        Item("清新"),
-        Item("暖色调"),
-        Item("冷色调"),
+        Item("自由"),
+        Item("1:1", ratio = 1f),
+        Item("4:3", ratio = 4f / 3f),
+        Item("16:9", ratio = 16f / 9f),
+        Item("3:4", ratio = 3f / 4f),
+        Item("9:16", ratio = 9f / 16f),
     )
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -27,6 +30,11 @@ class EditFilterAdapter() :
 
         fun bind(item: Item) {
             textButton.text = item.title
+            textButton.setOnClickListener { _ ->
+                getRootView?.invoke()?.run {
+                    this.findViewById<CropOverlayView>(R.id.crop_overlay).ratio = item.ratio
+                }
+            }
         }
     }
 

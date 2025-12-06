@@ -5,11 +5,10 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Environment
-import android.os.PersistableBundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -20,7 +19,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tt_ic_editing.interfaces.OnEditSelectedListener
+import com.example.tt_ic_editing.operations.CropOperation
+import com.example.tt_ic_editing.recycler_adapter.EditCropAdapter
+import com.example.tt_ic_editing.recycler_adapter.EditSelectAdapter
 import com.example.tt_ic_editing.viewmodel.EditViewModel
+import com.example.tt_ic_editing.viewmodel.OperationViewModel
+import com.example.tt_ic_editing.viewmodel.ScaledBitmapViewModal
 
 class EditActivity : AppCompatActivity() {
     private val editSelectViewModel: EditViewModel by viewModels()
@@ -76,7 +80,8 @@ class EditActivity : AppCompatActivity() {
                     scaledViewModel.bitmap.load(this, inUri)?.let { bitmap ->
                         try {
                             resolver.openOutputStream(outUri)?.use { outStream ->
-                                bitmap.compress(compressFormat, quality, outStream)
+                                operationViewModel.sequence.execute(bitmap)
+                                    .compress(compressFormat, quality, outStream)
                             }
                             contentValues.clear()
                             contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
@@ -97,15 +102,12 @@ class EditActivity : AppCompatActivity() {
             }
         }
 
-        val thumbImage = findViewById<ImageView>(R.id.edit_image)
+        val thumbImage = findViewById<PreviewImageView>(R.id.edit_image)
         thumbImage.post {
-            Log.d("App", "width: ${thumbImage.width}, height: ${thumbImage.height}")
-
             intent.data?.let { uri ->
                 if (uri == scaledViewModel.uri) {
                     scaledViewModel.bitmap.getImage()?.let { im ->
-//                        thumbImage.scaleType = ImageView.ScaleType.CENTER
-                        thumbImage.setImageBitmap(operationViewModel.sequence.execute(im))
+                        thumbImage.setImageBitmap(im)
                     } ?: run {
                         Toast.makeText(this, "图片加载失败", Toast.LENGTH_SHORT).show()
                         finish()
@@ -118,9 +120,7 @@ class EditActivity : AppCompatActivity() {
                         thumbImage.width,
                         thumbImage.height,
                     )?.let { im ->
-//                        thumbImage.scaleType = ImageView.ScaleType.CENTER
-                        thumbImage.setImageBitmap(operationViewModel.sequence.execute(im))
-//                        thumbImage.matrix.reset()
+                        thumbImage.setImageBitmap(im)
                     } ?: run {
                         Toast.makeText(this, "图片加载失败", Toast.LENGTH_SHORT).show()
                         finish()
@@ -141,6 +141,7 @@ class EditActivity : AppCompatActivity() {
                 Configuration.ORIENTATION_LANDSCAPE -> LinearLayoutManager.VERTICAL
                 else -> LinearLayoutManager.HORIZONTAL
             }
+        editSelectViewModel.editSelectAdapter.getRootView = { findViewById(R.id.main) }
 
         val subView = findViewById<RecyclerView>(R.id.edit_sub_view)
         subView.layoutManager = LinearLayoutManager(subView.context)
@@ -158,8 +159,29 @@ class EditActivity : AppCompatActivity() {
             object : OnEditSelectedListener {
                 override fun onItemSelected(position: Int) {
                     subView.adapter = (mainView.adapter as EditSelectAdapter).adapter
+                    val cropVisibility =
+                        when (subView.adapter) {
+                            is EditCropAdapter -> View.VISIBLE
+                            else -> View.GONE
+                        }
+                    setCropViewVisibility(cropVisibility)
                 }
             }
 //        subView.adapter = (mainView.adapter as EditSelectAdapter).adapter
+        findViewById<View>(R.id.btn_crop_done).setOnClickListener { _ ->
+            val cropRect = findViewById<CropOverlayView>(R.id.crop_overlay).getCropRect()
+            thumbImage.Crop(cropRect)?.let {
+                operationViewModel.sequence.add(
+                    CropOperation(it)
+                )
+            }
+            setCropViewVisibility(View.GONE)
+        }
+    }
+
+    private fun setCropViewVisibility(visibility: Int) {
+        findViewById<View>(R.id.crop_overlay).visibility = visibility
+        findViewById<View>(R.id.btn_crop_done).visibility = visibility
+//        findViewById<View>(R.id.btn_crop_cancel).visibility = visibility
     }
 }

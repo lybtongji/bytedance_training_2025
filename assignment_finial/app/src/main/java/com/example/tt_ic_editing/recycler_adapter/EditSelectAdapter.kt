@@ -1,4 +1,4 @@
-package com.example.tt_ic_editing
+package com.example.tt_ic_editing.recycler_adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tt_ic_editing.R
 import com.example.tt_ic_editing.interfaces.OnEditSelectedListener
 
 class EditSelectAdapter() :
@@ -18,7 +19,7 @@ class EditSelectAdapter() :
     )
 
     private val items = arrayOf(
-        Item("✂️", EditCropAdapter()),
+        Item("✂️", EditCropAdapter({ getRootView?.invoke() })),
         Item("🔄", EditRotateAdapter()),
         Item("🔆", EditLuminanceAdapter()),
         Item("\uD83C\uDF17", EditContrastAdapter()),
@@ -31,6 +32,8 @@ class EditSelectAdapter() :
 //    init {
 //        subView.adapter = items?.first()?.adapter
 //    }
+
+    var getRootView: (() -> View?)? = null
 
     var onEditSelectedListener: OnEditSelectedListener? = null
 

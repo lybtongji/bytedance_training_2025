@@ -6,6 +6,8 @@ import android.graphics.Bitmap
 import android.util.AttributeSet
 import android.graphics.Matrix
 import android.graphics.RectF
+import android.graphics.drawable.BitmapDrawable
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -34,10 +36,17 @@ class PreviewImageView @JvmOverloads constructor(
         gestureDetector = GestureDetector(context, GestureListener())
     }
 
-//    override fun setImageBitmap(bm: Bitmap?) {
-//        super.setImageBitmap(bm)
-//        bm?.run { post { centerImage() } }
-//    }
+    override fun setImageBitmap(bm: Bitmap?) {
+        super.setImageBitmap(bm)
+        bm?.run {
+            val dx = (this@PreviewImageView.width - width) / 2f
+            val dy = (this@PreviewImageView.height - height) / 2f
+
+            imageMatrixInternal.reset()
+            imageMatrixInternal.postTranslate(dx, dy)
+            imageMatrix = imageMatrixInternal
+        }
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -79,15 +88,6 @@ class PreviewImageView @JvmOverloads constructor(
                 isDragging = false
             }
         }
-    }
-
-    private fun centerImage() {
-        val rect = getMatrixRectF()
-
-        val dx = (width - rect.left - rect.right) / 2
-        val dy = (height - rect.top - rect.bottom) / 2
-
-        imageMatrixInternal.postTranslate(dx, dy)
     }
 
     // 边界修正
@@ -157,5 +157,43 @@ class PreviewImageView @JvmOverloads constructor(
 
             return true
         }
+    }
+
+    fun Crop(rectF: RectF): RectF? {
+        val inverseMatrix = Matrix()
+        imageMatrixInternal.invert(inverseMatrix)
+        inverseMatrix.mapRect(rectF)
+
+        val originalBitmap = (drawable as BitmapDrawable).bitmap
+
+        val left = rectF.left.coerceIn(0f, originalBitmap.width.toFloat())
+        val top = rectF.top.coerceIn(0f, originalBitmap.height.toFloat())
+
+        val right = rectF.right.coerceIn(0f, originalBitmap.width.toFloat())
+        val bottom = rectF.bottom.coerceIn(0f, originalBitmap.height.toFloat())
+
+        if (left < right && top < bottom) {
+            val originalWidth = originalBitmap.width
+            val originalHeight = originalBitmap.height
+
+            val cropped = Bitmap.createBitmap(
+                originalBitmap,
+                left.toInt(),
+                top.toInt(),
+                (right - left).toInt(),
+                (bottom - top).toInt(),
+            )
+
+            setImageBitmap(cropped)
+
+            return RectF(
+                left / originalWidth,
+                top / originalHeight,
+                right / originalWidth,
+                bottom / originalHeight,
+            )
+        }
+
+        return null
     }
 }

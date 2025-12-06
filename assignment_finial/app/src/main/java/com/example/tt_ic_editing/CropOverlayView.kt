@@ -6,12 +6,14 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Region
+import android.util.Log
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import kotlin.math.abs
 import kotlin.math.min
 import androidx.core.graphics.toColorInt
+import androidx.core.graphics.withSave
 
 class CropOverlayView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
@@ -33,20 +35,31 @@ class CropOverlayView(context: Context, attrs: AttributeSet?) : View(context, at
     private var lastX = 0f
     private var lastY = 0f
 
-    private var ratio: Float? = null
+    var ratio: Float? = null
         set(value) {
             field = value
+
+            value?.run {
+                val width = cropRect.right - cropRect.left
+                val height = cropRect.bottom - cropRect.top
+                if (width < height * this) {
+                    val newHeight = width / this
+                    val half = (newHeight - height) / 2f
+                    cropRect.top -= half
+                    cropRect.bottom += half
+                } else {
+                    val newWidth = height * this
+                    val half = (newWidth - width) / 2f
+                    cropRect.left -= half
+                    cropRect.right += half
+                }
+                invalidate()
+            }
         }
 
     enum class TouchArea { MOVE, LEFT, TOP, RIGHT, BOTTOM, LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM }
 
     private val handleSize = 40f  // 四角大小检测范围
-//
-//    fun setCropRatio(newRatio: Float) {
-//        ratio = newRatio
-//        updateCropRect()  // 根据比例更新裁剪框
-//        invalidate()      // 重新绘制
-//    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         // 初始化为居中的正方形
@@ -59,15 +72,15 @@ class CropOverlayView(context: Context, attrs: AttributeSet?) : View(context, at
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas.save()
+        canvas.withSave {
 
-        // 让 cropRect 不被绘制（形成透明区域）
-        canvas.clipOutRect(cropRect)
+            // 让 cropRect 不被绘制（形成透明区域）
+            clipOutRect(cropRect)
 
-        // 现在画遮罩（裁剪外的区域）
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), maskPaint)
+            // 现在画遮罩（裁剪外的区域）
+            drawRect(0f, 0f, width.toFloat(), height.toFloat(), maskPaint)
 
-        canvas.restore()
+        }
 
         // 绘制裁剪边框
         canvas.drawRect(cropRect, borderPaint)
@@ -83,6 +96,7 @@ class CropOverlayView(context: Context, attrs: AttributeSet?) : View(context, at
                 lastX = x
                 lastY = y
                 return touchArea != null
+//                return true
             }
 
             MotionEvent.ACTION_MOVE -> {
@@ -92,6 +106,7 @@ class CropOverlayView(context: Context, attrs: AttributeSet?) : View(context, at
                 lastY = y
                 updateCropRect(dx, dy)
                 invalidate()
+                return true
             }
 
             MotionEvent.ACTION_UP -> touchArea = null
@@ -100,40 +115,140 @@ class CropOverlayView(context: Context, attrs: AttributeSet?) : View(context, at
     }
 
     private fun updateCropRect(dx: Float, dy: Float) {
+        val newRect = RectF(cropRect)
+
         when (touchArea) {
-            TouchArea.MOVE -> cropRect.offset(dx, dy)
-            TouchArea.LEFT -> cropRect.left += dx
-            TouchArea.RIGHT -> cropRect.right += dx
-            TouchArea.TOP -> cropRect.top += dy
-            TouchArea.BOTTOM -> cropRect.bottom += dy
+            TouchArea.MOVE -> newRect.offset(dx, dy)
+            TouchArea.LEFT -> {
+                newRect.left += dx
+                ratio?.run {
+                    val width = newRect.right - newRect.left
+                    val height = width / this
+                    val half = (height - newRect.bottom + newRect.top) / 2f
+                    newRect.top -= half
+                    newRect.bottom += half
+                }
+            }
+
+            TouchArea.RIGHT -> {
+                newRect.right += dx
+                ratio?.run {
+                    val width = newRect.right - newRect.left
+                    val height = width / this
+                    val half = (height - newRect.bottom + newRect.top) / 2f
+                    newRect.top -= half
+                    newRect.bottom += half
+                }
+            }
+
+            TouchArea.TOP -> {
+                newRect.top += dy
+                ratio?.run {
+                    val height = newRect.bottom - newRect.top
+                    val width = height * this
+                    val half = (width - newRect.right + newRect.left) / 2f
+                    newRect.left -= half
+                    newRect.right += half
+                }
+            }
+
+            TouchArea.BOTTOM -> {
+                newRect.bottom += dy
+                ratio?.run {
+                    val height = newRect.bottom - newRect.top
+                    val width = height * this
+                    val half = (width - newRect.right + newRect.left) / 2f
+                    newRect.left -= half
+                    newRect.right += half
+                }
+            }
+
             TouchArea.LEFT_TOP -> {
-                cropRect.left += dx; cropRect.top += dy
+                newRect.left += dx
+                newRect.top += dy
+                ratio?.run {
+                    var width = newRect.right - newRect.left
+                    var height = newRect.bottom - newRect.top
+                    if (width < height) {
+                        height = width / this
+                        newRect.top -= height - newRect.bottom + newRect.top
+                    } else {
+                        width = height * this
+                        newRect.left -= width - newRect.right + newRect.left
+                    }
+                }
             }
 
             TouchArea.RIGHT_TOP -> {
-                cropRect.right += dx; cropRect.top += dy
+                newRect.right += dx
+                newRect.top += dy
+                ratio?.run {
+                    var width = newRect.right - newRect.left
+                    var height = newRect.bottom - newRect.top
+                    if (width < height) {
+                        height = width / this
+                        newRect.top -= height - newRect.bottom + newRect.top
+                    } else {
+                        width = height * this
+                        newRect.right += width - newRect.right + newRect.left
+                    }
+                }
             }
 
             TouchArea.LEFT_BOTTOM -> {
-                cropRect.left += dx; cropRect.bottom += dy
+                newRect.left += dx
+                newRect.bottom += dy
+                ratio?.run {
+                    var width = newRect.right - newRect.left
+                    var height = newRect.bottom - newRect.top
+                    if (width < height) {
+                        height = width / this
+                        newRect.bottom += height - newRect.bottom + newRect.top
+                    } else {
+                        width = height * this
+                        newRect.left -= width - newRect.right + newRect.left
+                    }
+                }
             }
 
             TouchArea.RIGHT_BOTTOM -> {
-                cropRect.right += dx; cropRect.bottom += dy
+                newRect.right += dx
+                newRect.bottom += dy
+                ratio?.run {
+                    var width = newRect.right - newRect.left
+                    var height = newRect.bottom - newRect.top
+                    if (width < height) {
+                        height = width / this
+                        newRect.bottom += height - newRect.bottom + newRect.top
+                    } else {
+                        width = height * this
+                        newRect.right += width - newRect.right + newRect.left
+                    }
+                }
             }
 
             else -> {}
         }
 
+        if (
+            (0f <= newRect.left) && (newRect.left < newRect.right) && (newRect.right <= width) &&
+            (0f <= newRect.top) && (newRect.top < newRect.bottom) && (newRect.bottom <= height)
+        ) {
+            cropRect = newRect
+        }
+
+
         // 限制区域
-        cropRect.left = cropRect.left.coerceAtLeast(0f)
-        cropRect.top = cropRect.top.coerceAtLeast(0f)
-        cropRect.right = cropRect.right.coerceAtMost(width.toFloat())
-        cropRect.bottom = cropRect.bottom.coerceAtMost(height.toFloat())
+//        cropRect.left = cropRect.left.coerceAtLeast(0f)
+//        cropRect.top = cropRect.top.coerceAtLeast(0f)
+//        cropRect.right = cropRect.right.coerceAtMost(width.toFloat())
+//        cropRect.bottom = cropRect.bottom.coerceAtMost(height.toFloat())
     }
 
     private fun getTouchArea(x: Float, y: Float): TouchArea? {
         val r = cropRect
+
+        Log.d("touch", "$r, $x, $y")
 
         return when {
             // 四角
@@ -156,5 +271,9 @@ class CropOverlayView(context: Context, attrs: AttributeSet?) : View(context, at
 
     private fun near(x: Float, y: Float, px: Float, py: Float): Boolean {
         return abs(x - px) < handleSize && abs(y - py) < handleSize
+    }
+
+    fun getCropRect(): RectF {
+        return RectF(cropRect)
     }
 }
