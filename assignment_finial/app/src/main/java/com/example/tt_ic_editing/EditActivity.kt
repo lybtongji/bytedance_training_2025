@@ -62,7 +62,7 @@ class EditActivity : AppCompatActivity() {
 
         val thumbImage = findViewById<PreviewImageView>(R.id.edit_image)
 
-        findViewById<TextView>(R.id.edit_title_text).text = intent.data.toString()
+//        findViewById<TextView>(R.id.edit_title_text).text = intent.data.toString()
 //        findViewById<ImageView>(R.id.edit_image).setImageURI(intent.data)
         findViewById<Button>(R.id.edit_return_btn).setOnClickListener { _ ->
             this.finish()

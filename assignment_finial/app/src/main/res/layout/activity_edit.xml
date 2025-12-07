@@ -104,20 +104,20 @@
 
         <Button
             android:id="@+id/btn_crop_done"
+            style="@style/EditCropButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="top|end"
-            style="@style/EditCropButton"
             android:padding="8dp"
             android:text="✔️"
             android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_crop_cancel"
+            style="@style/EditCropButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="top|start"
-            style="@style/EditCropButton"
             android:padding="8dp"
             android:text="❌️"
             android:visibility="gone" />
