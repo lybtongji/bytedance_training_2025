@@ -3,12 +3,14 @@ package com.example.tt_ic_editing
 import android.content.ContentValues
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.ColorMatrixColorFilter
 import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
+import android.graphics.Paint
+import android.graphics.Canvas
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -58,6 +60,8 @@ class EditActivity : AppCompatActivity() {
             insets
         }
 
+        val thumbImage = findViewById<PreviewImageView>(R.id.edit_image)
+
         findViewById<TextView>(R.id.edit_title_text).text = intent.data.toString()
 //        findViewById<ImageView>(R.id.edit_image).setImageURI(intent.data)
         findViewById<Button>(R.id.edit_return_btn).setOnClickListener { _ ->
@@ -83,8 +87,21 @@ class EditActivity : AppCompatActivity() {
                     scaledViewModel.bitmap.load(this, inUri)?.let { bitmap ->
                         try {
                             resolver.openOutputStream(outUri)?.use { outStream ->
-                                operationViewModel.sequence.execute(bitmap)
-                                    .compress(compressFormat, quality, outStream)
+                                val src = operationViewModel.sequence.execute(bitmap)
+
+                                val bmp = Bitmap.createBitmap(
+                                    src.width,
+                                    src.height,
+                                    src.config ?: Bitmap.Config.ARGB_8888
+                                )
+
+                                val paint = Paint()
+                                paint.colorFilter = thumbImage.colorFilter
+
+                                val canvas = Canvas(bmp)
+                                canvas.drawBitmap(src, 0f, 0f, paint)
+
+                                bmp.compress(compressFormat, quality, outStream)
                             }
                             contentValues.clear()
                             contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
@@ -105,7 +122,6 @@ class EditActivity : AppCompatActivity() {
             }
         }
 
-        val thumbImage = findViewById<PreviewImageView>(R.id.edit_image)
         thumbImage.post {
             intent.data?.let { uri ->
                 if (uri == scaledViewModel.uri) {
@@ -146,8 +162,7 @@ class EditActivity : AppCompatActivity() {
             }
         editSelectViewModel.editSelectAdapter.getRootView = { findViewById(R.id.main) }
         editSelectViewModel.editSelectAdapter.doRotate = { getMatrix ->
-            val bitmap = (thumbImage.drawable as BitmapDrawable).bitmap
-            thumbImage.applyMatrix(getMatrix(bitmap))
+            thumbImage.applyMatrix(getMatrix)
 
             operationViewModel.sequence.add(
                 MatrixOperation(getMatrix)

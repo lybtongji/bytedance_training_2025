@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tt_ic_editing.PreviewImageView
 import com.example.tt_ic_editing.R
 import com.google.android.material.slider.Slider
 
@@ -31,6 +32,15 @@ class EditContrastAdapter(private val getRootView: (() -> View?)? = null) :
             slider.valueFrom = item.from
             slider.valueTo = item.to
             slider.value = item.now
+            slider.addOnChangeListener { slider, value, fromUser ->
+                val view = getRootView?.invoke()
+                view?.run {
+                    val previewImageView = this.findViewById<PreviewImageView>(R.id.edit_image)
+                    previewImageView.updateTone(
+                        contrast = value,
+                    )
+                }
+            }
         }
     }
 

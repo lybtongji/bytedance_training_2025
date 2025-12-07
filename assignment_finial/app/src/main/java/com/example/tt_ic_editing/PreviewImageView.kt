@@ -3,13 +3,12 @@ package com.example.tt_ic_editing
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Canvas
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.util.AttributeSet
 import android.graphics.Matrix
-import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.drawable.BitmapDrawable
-import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -23,6 +22,9 @@ class PreviewImageView @JvmOverloads constructor(
     private var scaleGestureDetector: ScaleGestureDetector
     private var gestureDetector: GestureDetector
     private val imageMatrixInternal = Matrix()
+
+    private var currentBrightness = 0f
+    private var currentContrast = 1f
 
     private var currentScale = 1f
     private val minScale = 0.5f
@@ -43,6 +45,8 @@ class PreviewImageView @JvmOverloads constructor(
         bm?.run {
             val dx = (this@PreviewImageView.width - width) / 2f
             val dy = (this@PreviewImageView.height - height) / 2f
+
+            currentScale = 1f
 
             imageMatrixInternal.reset()
             imageMatrixInternal.postTranslate(dx, dy)
@@ -149,7 +153,7 @@ class PreviewImageView @JvmOverloads constructor(
     // 双击放大
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
         override fun onDoubleTap(e: MotionEvent): Boolean {
-            val targetScale = if (currentScale < 2f) 2f else 1f
+            val targetScale = if (currentScale < maxScale) maxScale else 1f
             val factor = targetScale / currentScale
 
             imageMatrixInternal.postScale(factor, factor, e.x, e.y)
@@ -160,7 +164,79 @@ class PreviewImageView @JvmOverloads constructor(
             return true
         }
     }
-    
+
+    //    fun Crop(rectF: RectF): RectF? {
+//        val inverseMatrix = Matrix()
+//        imageMatrixInternal.invert(inverseMatrix)
+//        inverseMatrix.mapRect(rectF)
+//
+//        val m = FloatArray(9)
+//        imageMatrixInternal.getValues(m)
+//        val rotation = (atan2(m[Matrix.MSKEW_X], m[Matrix.MSCALE_X]) * 180f / Math.PI).toFloat()
+//
+//        val originalBitmap = (drawable as BitmapDrawable).bitmap
+//
+//        val left = rectF.left.coerceIn(0f, originalBitmap.width.toFloat())
+//        val top = rectF.top.coerceIn(0f, originalBitmap.height.toFloat())
+//
+//        val right = rectF.right.coerceIn(0f, originalBitmap.width.toFloat())
+//        val bottom = rectF.bottom.coerceIn(0f, originalBitmap.height.toFloat())
+//
+//        if (left < right && top < bottom) {
+////            val newMatrix = Matrix().apply {
+////                postTranslate(-left, -top)
+////                postConcat(imageMatrixInternal)
+////                postTranslate(left, top)
+////            }
+//
+//            val originalWidth = originalBitmap.width
+//            val originalHeight = originalBitmap.height
+//
+//            val width = right - left
+//            val height = bottom - top
+//
+//            val cropped = Bitmap.createBitmap(
+//                originalBitmap,
+//                left.toInt(),
+//                top.toInt(),
+//                width.toInt(),
+//                height.toInt(),
+//            )
+//
+//            val scale = currentScale
+//
+//            setImageBitmap(cropped)
+//
+//            currentScale = scale
+//
+//            val dx = width * scale / 2f
+//            val dy = height * scale / 2f
+//
+//            imageMatrixInternal.apply {
+//                postTranslate(-dx, -dy)
+//                postScale(scale, scale)
+//                postRotate(rotation)
+//                postTranslate(dx, dy)
+//            }
+//
+////            imageMatrixInternal.set(newMatrix)
+//            imageMatrix = imageMatrixInternal
+//
+//            return RectF(
+//                left / originalWidth,
+//                top / originalHeight,
+//                right / originalWidth,
+//                bottom / originalHeight,
+//            )
+//
+////            MatrixOperation({ _ -> imageMatrixInternal }).apply(originalBitmap)
+//
+////            return normalizedRect
+//        }
+//
+//        return null
+//    }
+//
     fun Crop(rectF: RectF): RectF? {
         val inverseMatrix = Matrix()
         imageMatrixInternal.invert(inverseMatrix)
@@ -208,8 +284,44 @@ class PreviewImageView @JvmOverloads constructor(
         imageMatrix = imageMatrixInternal
     }
 
-    fun applyMatrix(value: Matrix) {
-        imageMatrixInternal.postConcat(value)
+    fun applyMatrix(getMatrix: ((Bitmap) -> Matrix)) {
+        val originalBitmap = (drawable as BitmapDrawable).bitmap
+//        val cx = originalBitmap.width / 2f
+//        val cy = originalBitmap.height / 2f
+
+        val matrix = getMatrix(originalBitmap)
+//
+//        val pts = floatArrayOf(cx, cy)
+//        imageMatrixInternal.mapPoints(pts)
+
+//        Log.d("apply", "${pts[0]}, ${pts[1]}")
+
+//        imageMatrixInternal.apply {
+//            postTranslate(-pts[0], -pts[1])
+//            postConcat(matrix)
+//            postTranslate(pts[0], pts[1])
+//        }
+
+        imageMatrixInternal.postConcat(matrix)
         imageMatrix = imageMatrixInternal
+    }
+
+    fun updateTone(brightness: Float? = null, contrast: Float? = null) {
+        brightness?.let { currentBrightness = it.coerceIn(-100f, 100f) }
+        contrast?.let { currentContrast = ((it + 50f) / 100f).coerceIn(0f, 2.5f) }
+
+        val cm = ColorMatrix()
+
+        val scale = currentContrast
+        val translate = (-0.5f * scale + 0.5f) * 255f
+        cm.set(floatArrayOf(
+            scale, 0f, 0f, 0f, translate + currentBrightness * 255 / 200,
+            0f, scale, 0f, 0f, translate + currentBrightness * 255 / 200,
+            0f, 0f, scale, 0f, translate + currentBrightness * 255 / 200,
+            0f, 0f, 0f, 1f, 0f
+        ))
+
+        colorFilter = ColorMatrixColorFilter(cm)
+        invalidate()
     }
 }

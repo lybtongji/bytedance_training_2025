@@ -24,8 +24,8 @@ class EditSelectAdapter() :
     private val items = arrayOf(
         Item("✂️", EditCropAdapter({ getRootView?.invoke() })),
         Item("🔄", EditRotateAdapter({ getMatrix -> doRotate?.invoke(getMatrix) })),
-        Item("🔆", EditLuminanceAdapter()),
-        Item("\uD83C\uDF17", EditContrastAdapter()),
+        Item("🔆", EditLuminanceAdapter({ getRootView?.invoke() })),
+        Item("\uD83C\uDF17", EditContrastAdapter({ getRootView?.invoke() })),
         Item("✨", EditFilterAdapter()),
         Item("\uD83D\uDE02", EditStickerAdapter()),
         Item("📝︎", EditTextEffectAdapter()),
