@@ -2,7 +2,8 @@
 <resources>
 
     <style name="EditMainViewButton" parent="Widget.AppCompat.TextView">
-        <item name="android:backgroundTint">@color/charcoal</item>
+        <item name="backgroundTint">@color/charcoal</item>
+        <item name="background">@null</item>
         <item name="android:textColor">@color/ghost_white</item>
         <item name="android:padding">0dp</item>
         <item name="borderWidth">1dp</item>
@@ -10,10 +11,16 @@
     </style>
 
     <style name="EditSubViewButton" parent="Widget.AppCompat.TextView">
-        <item name="android:backgroundTint">@color/charcoal</item>
+        <item name="backgroundTint">@color/charcoal</item>
+        <item name="background">@null</item>
         <item name="android:textColor">@color/ghost_white</item>
         <item name="android:padding">0dp</item>
         <item name="borderWidth">1dp</item>
         <item name="borderRound">0dp</item>
+    </style>
+
+    <style name="EditCropButton" parent="Widget.AppCompat.Button">
+        <item name="backgroundTint">#80000000</item>
+        <item name="background">@null</item>
     </style>
 </resources>

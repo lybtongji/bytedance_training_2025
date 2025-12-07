@@ -107,7 +107,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="top|end"
-            android:background="@android:color/transparent"
+            style="@style/EditCropButton"
             android:padding="8dp"
             android:text="✔️"
             android:visibility="gone" />
@@ -117,7 +117,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="top|start"
-            android:background="@android:color/transparent"
+            style="@style/EditCropButton"
             android:padding="8dp"
             android:text="❌️"
             android:visibility="gone" />
