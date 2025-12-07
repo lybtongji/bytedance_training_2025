@@ -1,6 +1,18 @@
 字节跳动 2025 客户端工程训练营 TT-IC-Editing
 
-使用 Android studio 基于 Kotlin/Java 语言进行开发，未使用第三方库。
+使用 Android studio 基于 Kotlin/Java 语言进行开发的图像编辑应用，未使用第三方库。
+
+实现图像的
+
+- 实时编辑预览，支持移动、缩放
+- 裁剪
+- 旋转 / 翻转
+- 亮度、对比度调节
+
+特性
+
+- 横竖屏切换
+- 日夜间模式切换
 
 测试设备：Redmi K30 5G、Oneplus 9R
 
