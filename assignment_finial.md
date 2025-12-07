@@ -2,6 +2,8 @@
 
 使用 Android studio 基于 Kotlin/Java 语言进行开发，未使用第三方库。
 
+测试设备：Redmi K30 5G、Oneplus 9R
+
 ## 结构
 
 ### HomeActivity
