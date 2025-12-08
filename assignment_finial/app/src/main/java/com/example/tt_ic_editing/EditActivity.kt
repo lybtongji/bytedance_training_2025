@@ -65,6 +65,7 @@ class EditActivity : AppCompatActivity() {
 //        findViewById<TextView>(R.id.edit_title_text).text = intent.data.toString()
 //        findViewById<ImageView>(R.id.edit_image).setImageURI(intent.data)
         findViewById<Button>(R.id.edit_return_btn).setOnClickListener { _ ->
+            operationViewModel.sequence.clear()
             this.finish()
         }
         findViewById<Button>(R.id.edit_save_btn).setOnClickListener { _ ->
@@ -107,6 +108,7 @@ class EditActivity : AppCompatActivity() {
                             contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
                             resolver.update(uri, contentValues, null, null)
                             Toast.makeText(this, "保存成功到相册", Toast.LENGTH_SHORT).show()
+                            operationViewModel.sequence.clear()
                         } catch (e: Exception) {
                             Toast.makeText(this, "文件保存失败", Toast.LENGTH_SHORT).show()
                             e.printStackTrace()
@@ -129,6 +131,7 @@ class EditActivity : AppCompatActivity() {
                         thumbImage.setImageBitmap(im)
                     } ?: run {
                         Toast.makeText(this, "图片加载失败", Toast.LENGTH_SHORT).show()
+                        operationViewModel.sequence.clear()
                         finish()
                     }
                 } else {
@@ -142,11 +145,13 @@ class EditActivity : AppCompatActivity() {
                         thumbImage.setImageBitmap(im)
                     } ?: run {
                         Toast.makeText(this, "图片加载失败", Toast.LENGTH_SHORT).show()
+                        operationViewModel.sequence.clear()
                         finish()
                     }
                 }
             } ?: run {
                 Toast.makeText(this, "图片路径为空", Toast.LENGTH_SHORT).show()
+                operationViewModel.sequence.clear()
                 finish()
             }
         }

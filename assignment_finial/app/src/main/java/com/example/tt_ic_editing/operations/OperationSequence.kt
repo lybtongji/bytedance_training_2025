@@ -17,6 +17,10 @@ class OperationSequence<T> {
         return this
     }
 
+    fun clear() {
+        operations.clear()
+    }
+
     fun execute(target: T, from: Int = 0): T {
         var result = target
         for (op in operations.subList(from, operations.size)) {
