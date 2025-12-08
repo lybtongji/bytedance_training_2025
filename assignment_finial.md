@@ -16,6 +16,15 @@
 
 测试设备：Redmi K30 5G、Oneplus 9R
 
+## 截图
+
+![](images/assignment_final_1.jpg)![](images/assignment_final_3.jpg)![](images/assignment_final_5.jpg)![](images/assignment_final_7.jpg)
+
+![](images/assignment_final_2.jpg)
+![](images/assignment_final_4.jpg)
+![](images/assignment_final_6.jpg)
+![](images/assignment_final_8.jpg)
+
 ## 结构
 
 ### HomeActivity
